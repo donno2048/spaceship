@@ -17,6 +17,9 @@ int t()
        memcpy(&f[Y + j][X], &s[j * u], u)
 #define l(x, y, w, h, a, b, c, d) \
        !((x - a > c && x >= a) || (a - x > w && a >= x) || (y - b > d && y >= b) || (b - y > h && b >= y))
+#define f(x)         \
+       strcpy(b, x); \
+       break
 
 int main()
 {
@@ -33,7 +36,7 @@ int main()
        {
               float x, y;
        } p = {w / 2, h / 2}, a[A], m[A];
-       char u = 0, f[h + 1][w];
+       char u = 0, f[h + 1][w], b[13] = " /\\ /  \\ vv ";
        while (1)
        {
               float d = (t() - l) * .001;
@@ -51,16 +54,16 @@ int main()
               {
               case 65:
                      p.y -= d * 15;
-                     break;
+                     f(" /\\ /  \\ vv ");
               case 66:
                      p.y += d * 15;
-                     break;
+                     f(" ^^ \\  / \\/ ");
               case 67:
                      p.x += d * 15;
-                     break;
+                     f("<\\  <  ></  ");
               case 68:
                      p.x -= d * 15;
-                     break;
+                     f("  /><  >  \\>");
               }
               p.x = p.x < 4 ? 4 : p.x >= w - 4 ? w - 4
                                                : p.x;
@@ -84,8 +87,8 @@ int main()
               g(e->x, e->y, 3, 2, "OOOOOO");
               if (i--)
                      goto L;
-              g(p.x, p.y, 4, 3, " /\\ /__\\ VV ");
-              puts(&f[0][4]);
+              g(p.x, p.y, 4, 3, b);
+              printf("\33[0;4H%s", &f[0][4]);
               while (t() - l < 9)
                      ;
               g = 0;
