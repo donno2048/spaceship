@@ -17,7 +17,8 @@ int t()
        memcpy(&f[Y + j][X], &s[j * u], u)
 #define l(x, y, w, h, a, b, c, d) \
        !((x - a > c && x >= a) || (a - x > w && a >= x) || (y - b > d && y >= b) || (b - y > h && b >= y))
-#define f(x)         \
+#define f(x, y, z)   \
+       y += z * d;   \
        strcpy(b, x); \
        break
 
@@ -53,17 +54,13 @@ int main()
               switch (u) // could be minified...
               {
               case 65:
-                     p.y -= d * 15;
-                     f(" /\\ /  \\ vv ");
+                     f(" /\\ /  \\ vv ", p.y, -20);
               case 66:
-                     p.y += d * 15;
-                     f(" ^^ \\  / \\/ ");
+                     f(" ^^ \\  / \\/ ", p.y, 20);
               case 67:
-                     p.x += d * 15;
-                     f("<\\  <  ></  ");
+                     f("<\\  <  ></  ", p.x, 40);
               case 68:
-                     p.x -= d * 15;
-                     f("  /><  >  \\>");
+                     f("  /><  >  \\>", p.x, -40);
               }
               p.x = p.x < 4 ? 4 : p.x >= w - 4 ? w - 4
                                                : p.x;
