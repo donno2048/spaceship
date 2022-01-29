@@ -10,6 +10,12 @@ Use the arrows to move, try avoiding the asteroids.
 gcc main.c -o main
 ```
 
+### Without cloning
+
+```sh
+wget https://raw.githubusercontent.com/donno2048/spaceship/master/main.c -O- | gcc -xc - -omain
+```
+
 ## Run
 
 ```sh
