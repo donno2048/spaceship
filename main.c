@@ -9,6 +9,7 @@
 #define Read(u) u = kbhit() ? getch() : u
 #define t GetTickCount
 #define tcsetattr(a,b,c)
+#define Print puts
 #else
 #include <time.h>
 #include <stdlib.h>
@@ -21,6 +22,7 @@
 #define RIGHT 67
 #define LEFT 68
 #define Read(u) read(0, &u, 1)
+#define Print(x) printf("\33[0;4H%s", x)
 int t() {
     struct timespec t;
     timespec_get(&t, TIME_UTC);
@@ -32,7 +34,7 @@ int t() {
 #define f(x, y, z) y += z * d; strcpy(b, x); break
 int main() {
 #ifdef _WIN32
-    CONSOLE_SCREEN_BUFFER_INFO csbi; // console info
+    CONSOLE_SCREEN_BUFFER_INFO csbi;                                    // console info
     GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi); // get console size
     int h = csbi.srWindow.Bottom - csbi.srWindow.Top + 1, w = csbi.srWindow.Right - csbi.srWindow.Left + 1;
 #else
@@ -75,13 +77,13 @@ int main() {
             e->y += d * z->y; // move the asteroid in the y direction
             e->x < 0 - 3 || e->x >= w + 3 || e->y >= h + 2 || g ? e->y = -rand() % h * (1 + g), e->x = rand() % w, z->x = -8 + rand() % 15, z->y = 10 + rand() % 5 : 0;
             if (l(p.x, p.y, 4, 3, e->x, e->y, 3, 2)) { // if player hit an asteroid
-                tcsetattr(0, TCSADRAIN, &o); // restore the terminal
-                exit(0);                     // exit the program
+                tcsetattr(0, TCSADRAIN, &o);           // restore the terminal
+                exit(0);                               // exit the program
             };
             g(e->x, e->y, 3, 2, "OOOOOO"); // draw the asteroid
         }
-        g(p.x, p.y, 4, 3, b);           // draw the player
-        printf("\33[0;4H%s", &f[0][4]); // print the screen
+        g(p.x, p.y, 4, 3, b); // draw the player
+        Print(&f[0][4]);      // print the screen
         while (t() - l < 10); // wait for a bit
         g = 0;
     }
