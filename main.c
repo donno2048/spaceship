@@ -48,7 +48,7 @@ int main() {
     ioctl(1, TIOCGWINSZ, &v);  // get terminal size
     int h = v.ws_row, w = v.ws_col;
 #endif
-    int A = w * h / 100, l = t(), g = 1;
+    int A = w * h / 100, l = t(), g = 1, start = l;
     struct V {
         float x, y;
     } p = {w / 2, h / 2}, a[A], m[A];
@@ -69,7 +69,7 @@ int main() {
             f("  /><  >  \\>", p.x, -40);
         }
         p.x = p.x < 4 ? 4 : p.x >= w - 4 ? w - 4 : p.x; // make sure the player is in the screen (horizontally)
-        p.y = p.y < 1 ? 1 : p.y >= h - 3 ? h - 3 : p.y; // make sure the player is in the screen (vertically)
+        p.y = p.y < 2 ? 2 : p.y >= h - 3 ? h - 3 : p.y; // make sure the player is in the screen (vertically)
         for (int i = 0; i < A; ++i) {
             *f[h] = 0;
             struct V *e = &a[i], *z = &m[i];
@@ -82,9 +82,10 @@ int main() {
             };
             g(e->x, e->y, 3, 2, "OOOOOO"); // draw the asteroid
         }
-        g(p.x, p.y, 4, 3, b); // draw the player
-        Print(&f[0][4]);      // print the screen
-        while (t() - l < 10); // wait for a bit
+        g(p.x, p.y, 4, 3, b);                                                                          // draw the player
+        for (int i = 2, j = 1000; i >= -2; i--, j *= 10) f[1][w / 2 + i] = '0' + (l - start) / j % 10; // draw the score
+        Print(&f[0][4]);                                                                               // print the screen
+        while (t() - l < 10);                                                                          // wait for a bit
         g = 0;
     }
 }
