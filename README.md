@@ -1,6 +1,6 @@
 # Spaceship
 
-Spaceship game in C, for Linux, based on @tsoj's, but with less code.
+Spaceship game in C, for Linux and Windows, based on @tsoj's.
 
 Use the arrows to move, try avoiding the asteroids.
 
