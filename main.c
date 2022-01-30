@@ -1,19 +1,41 @@
-#include <time.h>
 #include <stdio.h>
+#ifdef _WIN32
+#include <windows.h>
+#include <conio.h>
+#define UP 72
+#define DOWN 80
+#define RIGHT 77
+#define LEFT 75
+#define Read(u) u = kbhit() ? getch() : u
+#define t GetTickCount
+#define tcsetattr(a,b,c)
+#else
+#include <time.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <termios.h>
 #include <sys/ioctl.h>
+#define UP 65
+#define DOWN 66
+#define RIGHT 67
+#define LEFT 68
+#define Read(u) read(0, &u, 1)
+int t() {
+    struct timespec t;
+    timespec_get(&t, TIME_UTC);
+    return t.tv_sec * 1000 + t.tv_nsec / 1000000;
+}
+#endif
 #define g(x, y, u, v, s) for (int j = 0, X = x, Y = y; j < v && Y + j < h - X / w && Y >= 0 && X >= 0; ++j) memcpy(&f[Y + j][X], &s[j * u], u)
 #define l(x, y, w, h, a, b, c, d) !((x - a > c && x >= a) || (a - x > w && a >= x) || (y - b > d && y >= b) || (b - y > h && b >= y))
 #define f(x, y, z) y += z * d; strcpy(b, x); break
-int t() {
-    struct timespec now;
-    timespec_get(&now, TIME_UTC);
-    return now.tv_sec * 1000 + now.tv_nsec / 1000000;
-}
 int main() {
+#ifdef _WIN32
+    CONSOLE_SCREEN_BUFFER_INFO csbi; // console info
+    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi); // get console size
+    int h = csbi.srWindow.Bottom - csbi.srWindow.Top + 1, w = csbi.srWindow.Right - csbi.srWindow.Left + 1;
+#else
     struct termios z, o;
     tcgetattr(0, &z);          // get current terminal settings as a "backup"
     o = z;                     // save a copy
@@ -22,24 +44,26 @@ int main() {
     tcsetattr(0, TCSANOW, &z); // set new terminal settings
     struct winsize v;          // terminal size
     ioctl(1, TIOCGWINSZ, &v);  // get terminal size
-    int h = v.ws_row, w = v.ws_col, A = w * h / 100, l = t(), g = 1;
+    int h = v.ws_row, w = v.ws_col;
+#endif
+    int A = w * h / 100, l = t(), g = 1;
     struct V {
         float x, y;
     } p = {w / 2, h / 2}, a[A], m[A];
     char u = 0, f[h + 1][w], b[13] = " /\\ /  \\ vv ";
     while (1) {
         float d = (t() - l) * .001;
-        read(0, &u, 1); // read the next move
+        Read(u); // read input
         l = t();
         memset(f, ' ', h * w); // clear the screen
         switch (u) {           // could be minified...
-        case 65: // up
+        case UP:
             f(" /\\ /  \\ vv ", p.y, -20);
-        case 66: // down
+        case DOWN:
             f(" ^^ \\  / \\/ ", p.y, 20);
-        case 67: // right
+        case RIGHT:
             f("<\\  <  ></  ", p.x, 40);
-        case 68: // left
+        case LEFT:
             f("  /><  >  \\>", p.x, -40);
         }
         p.x = p.x < 4 ? 4 : p.x >= w - 4 ? w - 4 : p.x; // make sure the player is in the screen (horizontally)
