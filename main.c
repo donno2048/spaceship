@@ -8,7 +8,8 @@
 #define LEFT 75
 #define Read(u) u = kbhit() ? getch() : u
 #define tcsetattr(a, b, c)
-#define PrintError(x) SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4); puts(x); SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7); exit(1)
+#define SetupConsole() \
+    SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), ENABLE_PROCESSED_OUTPUT | ENABLE_WRAP_AT_EOL_OUTPUT | ENABLE_VIRTUAL_TERMINAL_PROCESSING)
 void getSize(int *x, int *y) {
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
@@ -27,8 +28,13 @@ void getSize(int *x, int *y) {
 #define RIGHT 67
 #define LEFT 68
 #define Read(u) read(0, &u, 1)
-#define puts(x) printf("\33[0;4H%s", x)
-#define PrintError(x) exit(printf("\33[0;31m%s\33[0m\n", x))
+#define SetupConsole() \
+    struct termios z, o; \
+    tcgetattr(0, &z); \
+    o = z; \
+    z.c_lflag &= ~ICANON; \
+    z.c_cc[VMIN] = 0; \
+    tcsetattr(0, TCSANOW, &z);
 int GetTickCount() {
     struct timespec t;
     timespec_get(&t, TIME_UTC);
@@ -45,14 +51,8 @@ void getSize(int *x, int *y) {
 #define l(x, y, w, h, a, b, c, d) !((x - a > c && x >= a) || (a - x > w && a >= x) || (y - b > d && y >= b) || (b - y > h && b >= y))
 #define f(x, y, z) y += z * d; strcpy(b, x); break
 int main() {
-#ifndef _WIN32
-    struct termios z, o;
-    tcgetattr(0, &z);          // get current terminal settings as a "backup"
-    o = z;                     // save a copy
-    z.c_lflag &= ~ICANON;      // disable canonical mode
-    z.c_cc[VMIN] = 0;          // minimum number of characters to read
-    tcsetattr(0, TCSANOW, &z); // set new terminal settings
-#endif
+    SetupConsole();
+    puts("\x1b[?25l"); // hide cursor
     int w, W, h, H;
     getSize(&w, &h);
     int A = w * h / 100, l = GetTickCount(), g = 1, start = l;
@@ -89,12 +89,12 @@ int main() {
             };
             g(e->x, e->y, 3, 2, "OOOOOO"); // draw the asteroid
         }
-        g(p.x, p.y, 4, 3, b);                                                                             // draw the player
-        for (int i = 2, j = 1000; i >= -2; i--, j *= 10) f[1][w / 2 + i] = '0' + (l - start) / j % 10;    // draw the score
-        getSize(&W, &H);                                                                                  // get the new screen size
-        if (W != w || H < h) {PrintError("\nPlease don't resize the screen, it will break the program");} // make sure the screen is not resized besides getting higher
-        else puts(&f[0][4]);                                                                              // print the screen
-        while (GetTickCount() - l < 10);                                                                  // wait for a bit
+        g(p.x, p.y, 4, 3, b);                                                                                                // draw the player
+        for (int i = 2, j = 1000; i >= -2; i--, j *= 10) f[1][w / 2 + i] = '0' + (l - start) / j % 10;                       // draw the score
+        getSize(&W, &H);                                                                                                     // get the new screen size
+        if (W != w || H < h) exit(printf("\033[0;31m\nPlease don't resize the screen, it will break the program\033[0m\n")); // make sure the screen is not resized besides getting higher
+        else printf("\033[0;4H%s", &f[0][4]);                                                                                // print the screen
+        while (GetTickCount() - l < 10);                                                                                     // wait for a bit
         g = 0;
     }
 }
