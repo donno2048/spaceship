@@ -49,7 +49,7 @@ void getSize(int *x, int *y) {
 #endif
 #define g(x, y, u, v, s) for (int j = 0, X = x, Y = y; j < v && Y + j < h - X / w && Y >= 0 && X >= 0; ++j) memcpy(&f[Y + j][X], &s[j * u], u)
 #define l(x, y, w, h, a, b, c, d) !((x - a > c && x >= a) || (a - x > w && a >= x) || (y - b > d && y >= b) || (b - y > h && b >= y))
-#define f(x, y, z) y += z * d; strcpy(b, x); break
+#define f(x, y, z) p.y += z * d; strcpy(b, x); break
 int main() {
     SetupConsole();
     puts("\x1b[?25l"); // hide cursor
@@ -67,13 +67,13 @@ int main() {
         memset(f, ' ', h * w); // clear the screen
         switch (u) {           // could be minified...
         case UP:
-            f(" /\\ /  \\ vv ", p.y, -20);
+            f(" /\\ /  \\ vv ", y, -20);
         case DOWN:
-            f(" ^^ \\  / \\/ ", p.y, 20);
+            f(" ^^ \\  / \\/ ", y, 20);
         case RIGHT:
-            f("<\\  <  ></  ", p.x, 40);
+            f("<\\  <  ></  ", x, 40);
         case LEFT:
-            f("  /><  >  \\>", p.x, -40);
+            f("  /><  >  \\>", x, -40);
         }
         p.x = p.x < 4 ? 4 : p.x >= w - 4 ? w - 4 : p.x; // make sure the player is in the screen (horizontally)
         p.y = p.y < 2 ? 2 : p.y >= h - 3 ? h - 3 : p.y; // make sure the player is in the screen (vertically)
