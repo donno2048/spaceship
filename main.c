@@ -89,12 +89,12 @@ int main() {
             };
             g(e->x, e->y, 3, 2, "OOOOOO"); // draw the asteroid
         }
-        g(p.x, p.y, 4, 3, b);                                                                                                // draw the player
-        for (int i = 2, j = 1000; i >= -2; i--, j *= 10) f[1][w / 2 + i] = '0' + (l - start) / j % 10;                       // draw the score
-        getSize(&W, &H);                                                                                                     // get the new screen size
-        if (W != w || H < h) exit(printf("\033[0;31m\nPlease don't resize the screen, it will break the program\033[0m\n")); // make sure the screen is not resized besides getting higher
-        else printf("\033[0;4H%s", &f[0][4]);                                                                                // print the screen
-        while (GetTickCount() - l < 10);                                                                                     // wait for a bit
+        g(p.x, p.y, 4, 3, b);                                                                                                               // draw the player
+        for (int i = -2, j = 1e7, k, K = 0; i <= 2; i++, j /= 10, k = (l - start) / j % 10, K = k | K) f[1][w / 2 + i] = K ? '0' + k : ' '; // draw the score
+        getSize(&W, &H);                                                                                                                    // get the new screen size
+        if (W != w || H < h) exit(printf("\033[0;31m\nPlease don't resize the screen, it will break the program\033[0m\n"));                // make sure the screen is not resized besides getting higher
+        else printf("\033[0;4H%s", &f[0][4]);                                                                                               // print the screen
+        while (GetTickCount() - l < 10);                                                                                                    // wait for a bit
         g = 0;
     }
 }
