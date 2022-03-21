@@ -52,7 +52,7 @@ void getSize(int *x, int *y) {
 #define f(x, y, z) p.y += z * d; strcpy(b, x); break
 int main() {
     SetupConsole();
-    puts("\x1b[?25l"); // hide cursor
+    printf("\x1b[?25l"); // hide cursor
     int w, W, h, H;
     getSize(&w, &h);
     int A = w * h / 100, l = GetTickCount(), g = 1, start = l;
