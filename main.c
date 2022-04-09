@@ -77,7 +77,7 @@ int main() {
         }
         p.x = p.x < 4 ? 4 : p.x >= w - 4 ? w - 4 : p.x; // make sure the player is in the screen (horizontally)
         p.y = p.y < 2 ? 2 : p.y >= h - 3 ? h - 3 : p.y; // make sure the player is in the screen (vertically)
-        for (int i = 0; i < A; ++i) {
+        for (int i = A - 1; i--;) {
             *f[h] = 0;
             struct V *e = &a[i], *z = &m[i];
             e->x += d * z->x; // move the asteroid in the x direction
