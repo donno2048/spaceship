@@ -1,4 +1,5 @@
 #include <stdio.h>
+#define ever ;;
 #ifdef _WIN32
 #include <windows.h>
 #include <conio.h>
@@ -60,7 +61,7 @@ int main() {
         float x, y;
     } p = {w / 2, h / 2}, a[A], m[A];
     char u = 0, f[h + 1][w], b[13] = " /\\ /  \\ vv ";
-    while (1) {
+    for (ever) {
         float d = (GetTickCount() - l) * .001;
         Read(u); // read input
         l = GetTickCount();
