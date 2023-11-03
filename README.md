@@ -1,6 +1,6 @@
 # Spaceship
 
-Spaceship game in 100 lines of C, for Linux and Windows, based on @tsoj's.
+Spaceship game in 111 lines of C, for Linux and Windows, based on @tsoj's.
 
 Use the arrows to move, try avoiding the asteroids.
 
