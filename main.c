@@ -17,7 +17,7 @@ void getSize(int *x, int *y) {
     *x = csbi.srWindow.Right - csbi.srWindow.Left + 1;
     *y = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
 }
-const char spaceship[][13] = {
+const char *spaceship[] = {
     " /\\ /  \\ vv ",
     NULL,
     NULL,
